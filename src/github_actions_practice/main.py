@@ -3,6 +3,7 @@
 
 import click
 from .utils import fetch_data, process_data
+from .web import create_project_report
 
 
 @click.command()
@@ -27,6 +28,17 @@ def fetch(url: str) -> None:
         raise
 
 
+@click.command()
+def report() -> None:
+    """生成專案報告網頁."""
+    try:
+        create_project_report()
+        click.echo("✅ 專案報告已生成在 docs/index.html")
+    except Exception as e:
+        click.echo(f"錯誤: {e}", err=True)
+        raise
+
+
 @click.group()
 def cli() -> None:
     """GitHub Actions 練習程式."""
@@ -35,6 +47,7 @@ def cli() -> None:
 
 cli.add_command(hello)
 cli.add_command(fetch)
+cli.add_command(report)
 
 
 if __name__ == '__main__':

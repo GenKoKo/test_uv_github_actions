@@ -1,0 +1,65 @@
+name: Deploy to GitHub Pages
+
+on:
+    push:
+        branches: [main]
+    workflow_run:
+        workflows: ["CI Pipeline"]
+        types:
+            - completed
+
+# 設置 GITHUB_TOKEN 的權限
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+# 只允許一個部署同時進行，跳過正在進行的部署之間排隊的運行
+concurrency:
+    group: "pages"
+    cancel-in-progress: false
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v4
+
+            - name: Set up Python
+              run: uv python install 3.11
+
+            - name: Install dependencies
+              run: uv sync --extra dev
+
+            - name: Run tests with coverage
+              run: |
+                  uv run pytest --cov=src --cov-report=html --cov-report=xml
+
+            - name: Generate project report
+              env:
+                  GITHUB_SHA: ${{ github.sha }}
+                  GITHUB_REF_NAME: ${{ github.ref_name }}
+              run: |
+                  uv run python -m src.github_actions_practice.main report
+
+            - name: Copy coverage report to docs
+              run: |
+                  mkdir -p docs/coverage
+                  cp -r htmlcov/* docs/coverage/ || echo "No coverage HTML report found"
+
+            - name: Setup Pages
+              uses: actions/configure-pages@v4
+
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: "./docs"
+
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4

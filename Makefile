@@ -41,6 +41,13 @@ run-hello: ## 執行 hello 命令
 run-fetch: ## 執行 fetch 命令
 	uv run python -m src.github_actions_practice.main fetch
 
+run-report: ## 生成專案報告
+	uv run python -m src.github_actions_practice.main report
+
+serve-docs: ## 啟動本地文件伺服器
+	@echo "啟動本地伺服器在 http://localhost:8000"
+	@cd docs && python -m http.server 8000
+
 dev-setup: install ## 設置開發環境
 	@echo "開發環境設置完成！"
 	@echo "執行 'make help' 查看可用命令"

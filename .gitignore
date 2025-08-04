@@ -157,5 +157,8 @@ Thumbs.db
 *.swo
 *~
 
+# Generated documentation
+docs/
+
 # uv
 .uv/
