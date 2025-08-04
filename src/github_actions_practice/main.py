@@ -7,16 +7,16 @@ from .web import create_project_report
 
 
 @click.command()
-@click.option('--name', default='World', help='要問候的名字')
-@click.option('--count', default=1, help='重複次數')
+@click.option("--name", default="World", help="要問候的名字")
+@click.option("--count", default=1, help="重複次數")
 def hello(name: str, count: int) -> None:
     """簡單的問候程式."""
     for _ in range(count):
-        click.echo(f'Hello {name}!')
+        click.echo(f"Hello {name}!")
 
 
 @click.command()
-@click.option('--url', default='https://httpbin.org/json', help='要取得資料的 URL')
+@click.option("--url", default="https://httpbin.org/json", help="要取得資料的 URL")
 def fetch(url: str) -> None:
     """從 URL 取得資料並處理."""
     try:
@@ -50,5 +50,5 @@ cli.add_command(fetch)
 cli.add_command(report)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

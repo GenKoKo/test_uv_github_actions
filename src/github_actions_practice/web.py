@@ -12,10 +12,10 @@ from .utils import fetch_data, process_data
 
 def generate_html_report(data: Dict[str, Any]) -> str:
     """生成 HTML 報告.
-    
+
     Args:
         data: 要展示的資料
-        
+
     Returns:
         HTML 字串
     """
@@ -168,7 +168,7 @@ def generate_html_report(data: Dict[str, Any]) -> str:
 </body>
 </html>
     """
-    
+
     return html_template.format(**data)
 
 
@@ -181,36 +181,36 @@ def create_project_report() -> None:
         api_result = process_data(api_data)
     except Exception as e:
         api_result = f"API 呼叫失敗: {str(e)}"
-    
+
     # 取得 Git 資訊
-    git_commit = os.getenv('GITHUB_SHA', 'local-development')[:8]
-    git_branch = os.getenv('GITHUB_REF_NAME', 'main')
-    
+    git_commit = os.getenv("GITHUB_SHA", "local-development")[:8]
+    git_branch = os.getenv("GITHUB_REF_NAME", "main")
+
     report_data = {
-        'python_version': '3.9+',
-        'test_count': 20,
-        'coverage': 95,
-        'build_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'git_commit': git_commit,
-        'git_branch': git_branch,
-        'api_result': api_result,
-        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')
+        "python_version": "3.9+",
+        "test_count": 20,
+        "coverage": 95,
+        "build_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "git_commit": git_commit,
+        "git_branch": git_branch,
+        "api_result": api_result,
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC"),
     }
-    
+
     # 生成 HTML
     html_content = generate_html_report(report_data)
-    
+
     # 確保輸出目錄存在
-    output_dir = Path('docs')
+    output_dir = Path("docs")
     output_dir.mkdir(exist_ok=True)
-    
+
     # 儲存 HTML 檔案
-    output_file = output_dir / 'index.html'
-    with open(output_file, 'w', encoding='utf-8') as f:
+    output_file = output_dir / "index.html"
+    with open(output_file, "w", encoding="utf-8") as f:
         f.write(html_content)
-    
+
     print(f"✅ 專案報告已生成: {output_file}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     create_project_report()
