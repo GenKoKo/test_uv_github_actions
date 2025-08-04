@@ -19,7 +19,7 @@ def fetch_data(url: str) -> Dict[str, Any]:
     """
     response = requests.get(url, timeout=10)
     response.raise_for_status()
-    return response.json()
+    return response.json()  # type: ignore[no-any-return]
 
 
 def process_data(data: Dict[str, Any]) -> str:
